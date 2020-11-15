@@ -1,0 +1,76 @@
+﻿{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.3/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.3",
+    "version": "1.0.1",
+    "id": "07edee8f-64ed-442f-93fa-6c54fda32a35",
+    "packageName": "com.etihad.cabincrew.xairlines",
+    "developer": {
+        "name": "Industry Demo Team",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx"
+    },
+    "name": {
+        "short": "Roster",
+        "full": "Airlines Cabin Crew App for Microsoft Teams"
+    },
+    "description": {
+        "short": "Roster Airlines app for Microsoft Teams",
+        "full": "Airlines app roster information. You can extend this to add more content and capabilities."
+    },
+    "icons": {
+        "outline": "outline.png",
+        "color": "color.png"
+    },
+    "accentColor": "#60A18E",
+    "staticTabs": [
+        {
+            "entityId": "com.contoso.Airlines.portal",
+            "name": "Portal",
+            "contentUrl": "https://eycabincrewteamsapp.azurewebsites.net/portal?userEmailId={upn}",
+            "websiteUrl": "https://eycabincrewteamsapp.azurewebsites.net/portal",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "07edee8f-64ed-442f-93fa-6c54fda32a35",
+            "needsChannelSelector": false,
+            "isNotificationOnly": false,
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "personal",
+                        "team"
+                    ],
+                    "commands": [
+                        {
+                            "title": "help",
+                            "description": "Displays options available with Airlines Bot"
+                        },
+                        {
+                            "title": "my next week roster",
+                            "description": "Displays the next week roster"
+                        },
+                        {
+                            "title": "my next month roster",
+                            "description": "Displays the next month roster"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [ "eycabincrewteamsapp.azurewebsites.net", "*.botframework.com" ]
+}
