@@ -35,7 +35,8 @@ namespace Airlines.XAirlines.ViewModels
                     monthlySchedule.Weekly.Add(weeklySchedule);
                 }
                 var duty = duties.FirstOrDefault(d => d.Date.Date == currentDate.Date);
-                weeklySchedule.Daily.Add(new Duty() { Date = currentDate,vacationPlan=duty.vacationPlan,isDayOff=duty.isDayOff, Details = duty?.Details });
+                if (duty != null)
+                    weeklySchedule.Daily.Add(new Duty() { Date = currentDate, vacationPlan = duty.vacationPlan, isDayOff = duty.isDayOff, Details = duty?.Details });
                 daysCount++;
                 currentDate = currentDate.AddDays(1);
                 if (currentDate.DayOfWeek == DayOfWeek.Sunday)

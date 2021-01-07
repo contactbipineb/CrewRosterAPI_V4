@@ -12,7 +12,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System.Web;
 using XAirlinesUpdate.Bots;
 
 namespace XAirlinesUpdate
@@ -49,6 +49,7 @@ namespace XAirlinesUpdate
             ApplicationSettings.BaseUrl = configuration["BaseUri"];
             ApplicationSettings.AppId = configuration["MicrosoftAppId"];
             ApplicationSettings.AppSecret = configuration["MicrosoftAppPassword"];
+            Airlines.XAirlines.Common.Constants.PortalTabDeeplink = $"https://teams.microsoft.com/l/entity/{ApplicationSettings.AppId}/com.contoso.Airlines.portal?webUrl={HttpUtility.UrlEncode(ApplicationSettings.BaseUrl + "/portal")}&label=Portal";
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

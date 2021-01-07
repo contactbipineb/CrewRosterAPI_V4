@@ -100,8 +100,7 @@ namespace Airlines.XAirlines.Helpers
             Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
             DateTime today = DateTime.Today;
             DateTime weekafter = today.AddDays(6);
-            List<Plan> weekplan = crew.plan.ToList();
-                //Where(c => c.date >= today && c.date <= weekafter).ToList();
+            List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= weekafter).ToList();
             return weekplan;
         }
         public static async Task<List<Plan>> MonthsPlan(string userEmailId)
@@ -109,7 +108,7 @@ namespace Airlines.XAirlines.Helpers
             Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
             DateTime today = DateTime.Today;
             DateTime monthafter = today.AddDays(30);
-            List<Plan> weekplan = crew.plan.Where(c => c.date >= today && c.date <= monthafter).ToList();
+            List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= monthafter).ToList();
             return weekplan;
         }
 

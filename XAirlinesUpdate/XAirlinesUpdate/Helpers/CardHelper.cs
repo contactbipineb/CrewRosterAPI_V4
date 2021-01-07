@@ -47,9 +47,9 @@ namespace Airlines.XAirlines.Helpers
             attachment.Content = listCard.content;
             return attachment;
         }
-        public static Attachment GetMonthlyRosterCard()
+        public static Attachment GetMonthlyRosterCard(string userId)
         {
-            var portal = Constants.PortalTabDeeplink;
+            var portal = $"{ApplicationSettings.BaseUrl}/portal?userEmailId={userId}"; //Constants.PortalTabDeeplink;
             var Card = new AdaptiveCard(new AdaptiveSchemaVersion("1.0"))
             {
                 Body = new List<AdaptiveElement>()
@@ -70,7 +70,7 @@ namespace Airlines.XAirlines.Helpers
             Card.Actions.Add(new AdaptiveOpenUrlAction()
             {
                 Title = "View Crew Portal",
-                Url = new System.Uri(Constants.PortalTabDeeplink)
+                Url = new System.Uri(portal)
             });
 
             return new Attachment()
@@ -360,31 +360,31 @@ namespace Airlines.XAirlines.Helpers
                                     {
                                         HorizontalAlignment=AdaptiveHorizontalAlignment.Right,
                                         Weight=AdaptiveTextWeight.Bolder,
-                                        Text=datePlan.flightDetails.gateOpensAt
+                                        Text= string.IsNullOrWhiteSpace(datePlan.flightDetails.gateOpensAt) ? "-" : datePlan.flightDetails.gateOpensAt
                                     },
                                     new AdaptiveTextBlock()
                                     {
                                         HorizontalAlignment=AdaptiveHorizontalAlignment.Right,
                                         Weight=AdaptiveTextWeight.Bolder,
-                                        Text=datePlan.flightDetails.blockhours
+                                        Text= string.IsNullOrWhiteSpace(datePlan.flightDetails.blockhours) ? "-" : datePlan.flightDetails.blockhours
                                     },
                                     new AdaptiveTextBlock()
                                     {
                                         HorizontalAlignment=AdaptiveHorizontalAlignment.Right,
                                         Weight=AdaptiveTextWeight.Bolder,
-                                        Text=datePlan.flightDetails.awayfromBase
+                                        Text= string.IsNullOrWhiteSpace(datePlan.flightDetails.awayfromBase) ? "-" : datePlan.flightDetails.awayfromBase
                                     },
                                     new AdaptiveTextBlock()
                                     {
                                         HorizontalAlignment=AdaptiveHorizontalAlignment.Right,
                                         Weight=AdaptiveTextWeight.Bolder,
-                                        Text=datePlan.flightDetails.acType
+                                        Text= string.IsNullOrWhiteSpace(datePlan.flightDetails.acType) ? "-" : datePlan.flightDetails.acType
                                     },
                                     new AdaptiveTextBlock()
                                     {
                                         HorizontalAlignment=AdaptiveHorizontalAlignment.Right,
                                         Weight=AdaptiveTextWeight.Bolder,
-                                        Text=datePlan.flightDetails.tailNo
+                                        Text= string.IsNullOrWhiteSpace(datePlan.flightDetails.tailNo) ? "-" : datePlan.flightDetails.tailNo
                                     },
                                 }
                             }
@@ -398,7 +398,7 @@ namespace Airlines.XAirlines.Helpers
                         Title="Weather Report",
                         Data=new WeatherActionDetails(){
                             Date =datePlan.flightDetails.flightEndDate.Date,
-                            City =datePlan.flightDetails.destination,
+                            City =datePlan.flightDetails.destinationCode,
                             ActionType =Constants.WeatherCard
                         }
                     },

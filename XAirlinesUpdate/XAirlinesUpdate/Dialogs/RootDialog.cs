@@ -46,13 +46,15 @@ namespace Airlines.XAirlines.Dialogs
                 {
                     message = RemoveMention(activity.Text.ToLower());
                     Attachment card = null;
+                    string crewid = string.Empty;
                     switch (message)
                     {
                         case Constants.NextMonthRoster:
-                            card = CardHelper.GetMonthlyRosterCard();
+                            crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName); // ${Debugging}
+                            card = CardHelper.GetMonthlyRosterCard(crewid);
                             break;
                         case Constants.NextWeekRoster:
-                            string crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
+                            crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
                             card = await CardHelper.GetWeeklyRosterCard(crewid);
                             // card = await CardHelper.GetWeeklyRosterCard("10055"); // ${Debugging}
                             break;
@@ -89,6 +91,7 @@ namespace Airlines.XAirlines.Dialogs
             var type = actionDetails.ActionType;
 
             Attachment card = null;
+            string crewid = string.Empty;
 
             switch (type)
             {
@@ -96,12 +99,13 @@ namespace Airlines.XAirlines.Dialogs
                     card = await GetDetailedRoasterCard(activity, userDetails, this.graphHelper);
                     break;
                 case Constants.NextWeekRoster:
-                    string crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
+                    crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
                     card = await CardHelper.GetWeeklyRosterCard(crewid);
                     // card = await CardHelper.GetWeeklyRosterCard("10055"); // ${Debugging}
                     break;
                 case Constants.NextMonthRoster:
-                    card = CardHelper.GetMonthlyRosterCard();
+                    crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
+                    card = CardHelper.GetMonthlyRosterCard(crewid);
                     break;
                 case Constants.WeatherCard:
                     card = await GetWeatherCard(activity);
