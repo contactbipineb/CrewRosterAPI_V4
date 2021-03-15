@@ -98,18 +98,32 @@ namespace Airlines.XAirlines.Helpers
         {
             
             Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
-            DateTime today = DateTime.Today;
-            DateTime weekafter = today.AddDays(6);
-            List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= weekafter).ToList();
-            return weekplan;
+            if (crew != null)
+            {
+                DateTime today = DateTime.Today;
+                DateTime weekafter = today.AddDays(6);
+                List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= weekafter).ToList();
+                return weekplan;
+            }
+            else
+            {
+                return new List<Plan>();
+            }
         }
         public static async Task<List<Plan>> MonthsPlan(string userEmailId)
         {
             Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
-            DateTime today = DateTime.Today;
-            DateTime monthafter = today.AddDays(30);
-            List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= monthafter).ToList();
-            return weekplan;
+            if (crew != null)
+            {
+                DateTime today = DateTime.Today;
+                DateTime monthafter = today.AddDays(30);
+                List<Plan> weekplan = crew.plan.Where(c => c.flightDetails.flightStartDate >= today && c.flightDetails.flightStartDate <= monthafter).ToList();
+                return weekplan;
+            }
+            else
+            {
+                return new List<Plan>();
+            }
         }
 
         public static void UpdateMockData(string filename)
