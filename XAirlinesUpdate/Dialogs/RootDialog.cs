@@ -23,10 +23,12 @@ namespace Airlines.XAirlines.Dialogs
     {
         private const string mentionPattern = "<at>([^]]*)</at>";
         private readonly GraphHelper graphHelper;
+        private readonly IConfiguration configuration;
 
         public RootDialog(IConfiguration configuration)
         {
             this.graphHelper = new GraphHelper(configuration);
+            this.configuration = configuration;
         }
 
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext innerDc, object options, CancellationToken cancellationToken = default)
@@ -55,14 +57,14 @@ namespace Airlines.XAirlines.Dialogs
                             break;
                         case Constants.NextWeekRoster:
                             crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
-                            card = await CardHelper.GetWeeklyRosterCard(crewid);
+                            card = await CardHelper.GetWeeklyRosterCard(crewid, configuration);
                             // card = await CardHelper.GetWeeklyRosterCard("10055"); // ${Debugging}
                             break;
                         case Constants.UpdateCard:
                             card = CardHelper.GetUpdateScreen();
                             break;
                         case Constants.ShowDetailedRoster:
-                            card = await GetDetailedRoasterCard(activity, userDetails, this.graphHelper);
+                            card = await GetDetailedRoasterCard(activity, userDetails, this.graphHelper, configuration);
                             break;
                         default:
                             card = CardHelper.GetWelcomeScreen(userDetails.GivenName ?? userDetails.Name);
@@ -96,11 +98,11 @@ namespace Airlines.XAirlines.Dialogs
             switch (type)
             {
                 case Constants.ShowDetailedRoster:
-                    card = await GetDetailedRoasterCard(activity, userDetails, this.graphHelper);
+                    card = await GetDetailedRoasterCard(activity, userDetails, this.graphHelper, configuration);
                     break;
                 case Constants.NextWeekRoster:
                     crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
-                    card = await CardHelper.GetWeeklyRosterCard(crewid);
+                    card = await CardHelper.GetWeeklyRosterCard(crewid, configuration);
                     // card = await CardHelper.GetWeeklyRosterCard("10055"); // ${Debugging}
                     break;
                 case Constants.NextMonthRoster:
@@ -123,13 +125,13 @@ namespace Airlines.XAirlines.Dialogs
              return System.Text.RegularExpressions.Regex.Replace(message, mentionPattern, String.Empty).Trim();
         }
 
-        private static async Task<Attachment> GetDetailedRoasterCard(Activity activity, TeamsChannelAccount userDetails, GraphHelper graphHelper)
+        private static async Task<Attachment> GetDetailedRoasterCard(Activity activity, TeamsChannelAccount userDetails, GraphHelper graphHelper, IConfiguration configuration)
         {
             var details = JsonConvert.DeserializeObject<AirlineActionDetails>(activity.Value.ToString());
             // Crew crew = await CabinCrewPlansHelper.ReadJson(userDetails.UserPrincipalName);
 
             string crewid = await graphHelper.GetUserEmployeeIdAsync(userDetails.UserPrincipalName);
-            Crew crew = await CabinCrewPlansHelper.ReadJson(crewid);
+            Crew crew = await CabinCrewPlansHelper.ReadJson(crewid, configuration);
             // Crew crew = await CabinCrewPlansHelper.ReadJson("10055"); // ${Debugging}
             var datePlan = crew.plan.FirstOrDefault(c => c.flightDetails.flightStartDate.Date.ToString() == details.Id);
             return CardHelper.GetDetailedRoster(datePlan);

@@ -11,11 +11,18 @@ using static Airlines.XAirlines.Helpers.WeatherHelper;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using Airlines.XAirlines.Dialogs;
+using Microsoft.Extensions.Configuration;
 
 namespace Airlines.XAirlines.Controllers
 {
     public class AirlinesController : Controller
     {
+        private readonly IConfiguration configuration;
+
+        public AirlinesController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         [Route("")]
         public IActionResult Index()
         {
@@ -40,7 +47,7 @@ namespace Airlines.XAirlines.Controllers
                 return StatusCode(404);
             }
             // var cabinCrewData = await CabinCrewPlansHelper.MonthsPlan("10055"); // ${Debugging}
-            var cabinCrewData = await CabinCrewPlansHelper.MonthsPlan(userEmailId);
+            var cabinCrewData = await CabinCrewPlansHelper.MonthsPlan(userEmailId, configuration);
             if (cabinCrewData == null)
                 return StatusCode(404);
             List<Duty> duties = new List<Duty>();
@@ -60,7 +67,7 @@ namespace Airlines.XAirlines.Controllers
             Portal portal = new Portal();
             AdaptiveCardRenderer renderer = new AdaptiveCardRenderer();
             // var card = await CardHelper.GetMyDetailedCard(code, "10055"); // ${Debugging}
-            var card = await CardHelper.GetMyDetailedCard(code, userEmailId);
+            var card = await CardHelper.GetMyDetailedCard(code, userEmailId, configuration);
             if (card == null)
             {
                 return StatusCode(404);

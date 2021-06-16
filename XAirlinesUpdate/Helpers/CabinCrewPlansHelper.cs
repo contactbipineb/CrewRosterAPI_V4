@@ -1,4 +1,5 @@
 ﻿using Airlines.XAirlines.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,11 +38,11 @@ namespace Airlines.XAirlines.Helpers
         //    else
         //        return null;
         //}
-        public static async Task<Crew> ReadJson(string userEmailId)
+        public static async Task<Crew> ReadJson(string userEmailId, IConfiguration configuration)
         {
             Crew crews = null;
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync($"https://eycrewchatbot.azurewebsites.net/api/roster?employeeId={userEmailId}");
+            HttpResponseMessage response = await client.GetAsync($"https://{configuration["ApiAppDomain"]}/api/roster?employeeId={userEmailId}");
         
             if (response.IsSuccessStatusCode)
             {
@@ -94,10 +95,10 @@ namespace Airlines.XAirlines.Helpers
             */
             return crews;
         }
-        public static async Task<List<Plan>> WeeksPlan(string userEmailId)
+        public static async Task<List<Plan>> WeeksPlan(string userEmailId, IConfiguration configuration)
         {
             
-            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
+            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId, configuration);
             if (crew != null)
             {
                 DateTime today = DateTime.Today;
@@ -110,9 +111,9 @@ namespace Airlines.XAirlines.Helpers
                 return new List<Plan>();
             }
         }
-        public static async Task<List<Plan>> MonthsPlan(string userEmailId)
+        public static async Task<List<Plan>> MonthsPlan(string userEmailId, IConfiguration configuration)
         {
-            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
+            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId, configuration);
             if (crew != null)
             {
                 DateTime today = DateTime.Today;

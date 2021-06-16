@@ -2,6 +2,7 @@
 using Airlines.XAirlines.Common;
 using Airlines.XAirlines.Models;
 using Microsoft.Bot.Schema;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace Airlines.XAirlines.Helpers
 {
     public class CardHelper
     {
-        public static async Task<Attachment> GetWeeklyRosterCard(string userName)
+        public static async Task<Attachment> GetWeeklyRosterCard(string userName, IConfiguration configuration)
         {
-            List<Plan> weekplan = await CabinCrewPlansHelper.WeeksPlan(userName);
+            List<Plan> weekplan = await CabinCrewPlansHelper.WeeksPlan(userName, configuration);
             var listCard = new ListCard();
             listCard.content = new Content();
             listCard.content.title = "Here is your next week's roster";
@@ -896,9 +897,9 @@ namespace Airlines.XAirlines.Helpers
 
             };
         }
-        public static async Task<Attachment> GetMyDetailedCard(string code, string userEmailId)
+        public static async Task<Attachment> GetMyDetailedCard(string code, string userEmailId, IConfiguration configuration)
         {
-            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId);
+            Crew crew = await CabinCrewPlansHelper.ReadJson(userEmailId, configuration);
             var dayPlan = crew.plan.FirstOrDefault(c => c.date.Date == Convert.ToDateTime(code));
             if (dayPlan == null)
                 return null;
